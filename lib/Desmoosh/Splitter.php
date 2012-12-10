@@ -23,7 +23,9 @@ class Splitter
 		{
 			$prefix = substr($string, 0, $i+1);
 
-			if($this->_graph->contains($prefix))
+			if(
+				(strlen($prefix) > 1 || in_array($prefix, array('i', 'a'))) &&
+				$this->_graph->contains($prefix))
 			{
 				$words[$prefix] = $this->_enumerate(substr($string, strlen($prefix)));
 
@@ -69,21 +71,24 @@ class Splitter
 
 		foreach($stacks as $stack)
 		{
-			//printf("Stack %s [count %d avg %d median %d]\n",
-			//	implode('|', $stack), count($stack), self::avg($stack), self::median($stack));
+			if(getenv('DEBUG'))
+			{
+				printf("Stack %s [count %d avg %d median %d score %d]\n",
+					implode('|', $stack), count($stack), $this->_avg($stack), $this->_median($stack), $this->_frequency($stack));
+			}
 
 			if(!isset($lowest[0]) ||
-				(count($stack) <= $lowest[1]) ||
-				(count($stack) == $lowest[1] && self::median($stack) < $lowers[2]))
+				(count($stack) < $lowest[1]) ||
+				(count($stack) == $lowest[1] && $this->_frequency($stack) > $lowest[2]))
 			{
-				$lowest = array($stack, count($stack), self::median($stack));
+				$lowest = array($stack, count($stack), $this->_frequency($stack));
 			}
 		}
 
 		return $lowest[0];
 	}
 
-	public static function median($array)
+	private function _median($array)
 	{
 		$lengths = array_map('strlen', $array);
 		rsort($lengths);
@@ -91,9 +96,19 @@ class Splitter
 		return $lengths[$middle-1];
 	}
 
-	public static function avg($array)
+	private function _avg($array)
 	{
 		$lengths = array_map('strlen', $array);
 		return array_sum($lengths) / count($array);
+	}
+
+	private function _frequency($array)
+	{
+		$sum = 0;
+
+		foreach($array as $word)
+			$sum += $this->_graph->frequency($word);
+
+		return $sum;
 	}
 }

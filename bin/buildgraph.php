@@ -14,22 +14,17 @@ $counter = 0;
 
 while($line = trim(fgets($stdin)))
 {
-	// break into words
-	preg_match_all("/[A-z0-9]+\S/", $line, $match);
-
-	foreach($match[0] as $word)
+	// break into word => frequency
+	if(preg_match("/^([A-z0-9]+)\s*(\d+)?$/", $line, $match))
 	{
-		if(strlen($word) == 1 && !in_array($word, array('a','i')))
-			continue;
+		$graph->add($match[1], $match[2]);
 
-		$graph->add($word);
+		printf("Processed %s words, last frequency was %d (%.2f Mbytes of mem)\n",
+			number_format($counter++), $match[2], memory_get_usage()/1024/1024);
 
-		printf("Processed %s words (%.2f Mbytes of mem)\n",
-			number_format($counter++), memory_get_usage()/1024/1024);
+		unset($match);
+		unset($word);
 	}
-
-	unset($match);
-	unset($word);
 }
 
 printf("Writing %s\n", $argv[1]);

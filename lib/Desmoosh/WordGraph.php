@@ -11,13 +11,13 @@ class WordGraph
 
   public function __construct($words=array())
 	{
-		$this->_graph = array('^'=>array('$'=>array()));
+		$this->_graph = array('^'=>array('$'=>0));
 
 		foreach($words as $word)
 			$this->add($word);
 	}
 
-	public function add($word)
+	public function add($word, $freq=1)
 	{
 		$word = preg_replace('/[^a-z]+/','',trim(strtolower($word))).self::WORD_END;
 		$node =& $this->_graph[self::WORD_START];
@@ -25,7 +25,7 @@ class WordGraph
 		foreach(str_split($word) as $chr)
 		{
 			if(!isset($node[$chr]))
-				$node[$chr] = array();
+				$node[$chr] = $chr == self::WORD_END ? $freq : array();
 
 			$node =& $node[$chr];
 		}
@@ -38,20 +38,27 @@ class WordGraph
 
 	public function lookup($string)
 	{
-		if(empty($string))
-			return false;
-
 		$node = $this->_graph[self::WORD_START];
 
 		foreach(str_split($string) as $chr)
 		{
-			if(!isset($node[$chr]))
+			if(!isset($node[$chr]) || is_numeric($node[$chr]))
 				return false;
 
 			$node = $node[$chr];
 		}
 
 		return $node;
+	}
+
+	public function frequency($word)
+	{
+		$node = $this->lookup($word);
+
+		if(($node = $this->lookup($word)) && isset($node[self::WORD_END]))
+			return $node[self::WORD_END];
+
+		return 0;
 	}
 
 	public static function fromJson($file)
