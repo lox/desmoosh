@@ -69,6 +69,9 @@ class Splitter
 
 		foreach($stacks as $stack)
 		{
+			//printf("Stack %s [count %d avg %d median %d]\n",
+			//	implode('|', $stack), count($stack), self::avg($stack), self::median($stack));
+
 			if(!isset($lowest[0]) ||
 				(count($stack) <= $lowest[1]) ||
 				(count($stack) == $lowest[1] && self::median($stack) < $lowers[2]))

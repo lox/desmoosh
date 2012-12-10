@@ -25,4 +25,5 @@ while($line = trim(fgets($stdin)))
 
 	printf("%s (in %.2fms)\n",
 		implode(' ', $words), (microtime(true)-$time)*1000);
+
 }

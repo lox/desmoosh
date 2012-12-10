@@ -19,7 +19,7 @@ class WordGraph
 
 	public function add($word)
 	{
-		$word = preg_replace('/[^a-z]+/',' ',trim(strtolower($word))).self::WORD_END;
+		$word = preg_replace('/[^a-z]+/','',trim(strtolower($word))).self::WORD_END;
 		$node =& $this->_graph[self::WORD_START];
 
 		foreach(str_split($word) as $chr)
@@ -38,14 +38,17 @@ class WordGraph
 
 	public function lookup($string)
 	{
-		$node =& $this->_graph[self::WORD_START];
+		if(empty($string))
+			return false;
+
+		$node = $this->_graph[self::WORD_START];
 
 		foreach(str_split($string) as $chr)
 		{
 			if(!isset($node[$chr]))
 				return false;
 
-			$node =& $node[$chr];
+			$node = $node[$chr];
 		}
 
 		return $node;
