@@ -4,60 +4,62 @@ namespace Desmoosh;
 
 class WordGraph
 {
-	const WORD_BOUNDARY='$';
+	const WORD_START='^';
+	const WORD_END='$';
 
-	private $_words=array();
-
-
+	private $_graph;
 
   public function __construct($words=array())
 	{
+		$this->_graph = array('^'=>array('$'=>array()));
+
 		foreach($words as $word)
-			$this->word($word);
+			$this->add($word);
 	}
 
-	public function word($word)
+	public function add($word)
 	{
-		$word = preg_replace('/[^a-z]+/',' ',trim(strtolower($word)));
+		$word = preg_replace('/[^a-z]+/',' ',trim(strtolower($word))).self::WORD_END;
+		$node =& $this->_graph[self::WORD_START];
 
-		for($i=0; $i<=strlen($word); $i++)
+		foreach(str_split($word) as $chr)
 		{
-			$prefix = substr($word, 0, $i) ?: '^';
-			$chr = substr($word, $i, 1) ?: '$';
+			if(!isset($node[$chr]))
+				$node[$chr] = array();
 
-			if(!isset($this->_words[$prefix][$chr]))
-				$this->_words[$prefix][$chr] = 0;
-
-			$this->_words[$prefix][$chr]++;
-		}
-	}
-
-	public function sentence($string)
-	{
-		// break into words
-		preg_match_all("/[A-z0-9]+\S/", $sentence, $match);
-
-		foreach($match[0] as $word)
-		{
-			for($i=1; $i<=strlen($word); $i++)
-				$this->word(substr($word, 0, $i));
+			$node =& $node[$chr];
 		}
 	}
 
 	public function contains($word)
 	{
-		return isset($this->_words[$word][self::WORD_BOUNDARY]);
+		return ($node = $this->lookup($word)) && isset($node[self::WORD_END]);
+	}
+
+	public function lookup($string)
+	{
+		$node =& $this->_graph[self::WORD_START];
+
+		foreach(str_split($string) as $chr)
+		{
+			if(!isset($node[$chr]))
+				return false;
+
+			$node =& $node[$chr];
+		}
+
+		return $node;
 	}
 
 	public static function fromJson($file)
 	{
 		$graph = new self();
-		$graph->_words = json_decode(file_get_contents($file), true);
+		$graph->_graph = json_decode(file_get_contents($file), true);
 		return $graph;
 	}
 
 	public function toJson($file)
 	{
-		file_put_contents($file, json_encode($this->_words));
+		file_put_contents($file, json_encode($this->_graph));
 	}
 }

@@ -12,7 +12,7 @@ use Desmoosh\Splitter;
  */
 
 if(count($argv) == 1)
-	die("usage: {$argv[0]} corpus.json");
+	die("usage: {$argv[0]} graph.json");
 
 $splitter = new Splitter(WordGraph::fromJson($argv[1]));
 $stdin = fopen('php://stdin', 'r');

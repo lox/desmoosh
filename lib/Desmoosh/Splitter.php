@@ -60,10 +60,37 @@ class Splitter
 			$stacks []= $stack;
 		});
 
-		usort($stacks, function($a, $b) {
-			return strcmp(count($a), count($b)) * -1;
-		});
+		return $this->_bestStack($stacks);
+	}
 
-		return array_pop($stacks);
+	private function _bestStack($stacks)
+	{
+		$lowest = array();
+
+		foreach($stacks as $stack)
+		{
+			if(!isset($lowest[0]) ||
+				(count($stack) <= $lowest[1]) ||
+				(count($stack) == $lowest[1] && self::median($stack) < $lowers[2]))
+			{
+				$lowest = array($stack, count($stack), self::median($stack));
+			}
+		}
+
+		return $lowest[0];
+	}
+
+	public static function median($array)
+	{
+		$lengths = array_map('strlen', $array);
+		rsort($lengths);
+    $middle = round(count($lengths) / 2);
+		return $lengths[$middle-1];
+	}
+
+	public static function avg($array)
+	{
+		$lengths = array_map('strlen', $array);
+		return array_sum($lengths) / count($array);
 	}
 }

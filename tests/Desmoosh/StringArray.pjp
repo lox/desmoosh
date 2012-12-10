@@ -1,0 +1,20 @@
+<?php
+
+namespace Desmoosh;
+
+class StringArray
+{
+	public static function median($array)
+	{
+		$lengths = array_map('strlen', $array);
+		rsort($lengths);
+    $middle = round(count($lengths) / 2);
+		return $lengths[$middle-1];
+	}
+
+	public static function avg($array)
+	{
+		$lengths = array_map('strlen', $array);
+		return array_sum($lengths) / count($array);
+	}
+}
