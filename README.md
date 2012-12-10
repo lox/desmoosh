@@ -3,24 +3,39 @@ Desmoosh
 
 Takes a string with spaces removed and infers word boundaries.
 
-Requires a DAWG to be built initially:
+Building a Word Graph
+---------------------
+
+Desmoosh works by finding all permutations of words and then choosing the best
+possible combination based on frequency analysis from a corpus of text.
+
+Before we can do this, the graph needs to be generated. This is slow, but once
+it's done desmooshing is quick. The internal node tree is persisted to disk in JSON format.
+
+I use [this word frequency](http://www.monlp.com/2012/04/16/calculating-word-and-n-gram-statistics-from-a-wikipedia-corpora/) table collected from Wikipedia and Project Gutenberg:
 
 ```bash
-$ cat ispell/english.* ispell/extra | php bin/buildgraph.php ispell/ispell.json
+wget http://d241g0t0c5miix.cloudfront.net/data/combined_wordfreq.txt.gz
+gunzip combined_wordfreq.txt.gz
+head -n200000 combined_wordfreq.txt | php bin/buildgraph.php dict/wikipedia_guttenberg.json
 ```
 
-Then the desmoosh script references the graph built and stored in json:
+Desmooshing words
+-----------------
 
 ```bash
-$ cat examples.txt | php bin/desmoosh.php ispell/ispell.json
+cat examples.txt | php bin/desmoosh.php dict/wikipedia_guttenberg.json
 
-debtconsolidateweb => debt consolidate web (in 3.94ms)
-mydisneyvacationresort => my disney vacation resort (in 4.72ms)
-machoarts => macho arts (in 0.91ms)
-idrawonphoto => id raw on photo (in 0.63ms)
-myfreeforextraining => my free forex training (in 1.73ms)
-cattick => cat tick (in 0.41ms)
-fooarmrestyourbararrestbarfoo => foo armrest your bar arrest bar foo (in 9.98ms)
+debtconsolidateweb => debt consolidate web (in 52.13ms)
+mydisneyvacationresort => my disney vacation resort (in 50.08ms)
+machoarts => macho arts (in 3.34ms)
+idrawonphoto => i draw on photo (in 6.23ms)
+myfreeforextraining => my free forex training (in 38.80ms)
+cattick => cat tick (in 1.54ms)
+fooarmrestyourbararrestbarfoo => foo armrest your bar arrest bar foo (in 958.03ms)
+expertsexchange => experts exchange (in 16.36ms)
+threelittlepigswenttomarket => three little pigs went to market (in 1133.91ms)
+theirony => the irony (in 2.17ms)
+malsucksatbugreports => mal sucks at bug reports (in 40.91ms)
 ```
 
-Damn you Dave for wasting my entire weekend.
