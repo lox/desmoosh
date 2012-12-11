@@ -23,6 +23,8 @@ head -n200000 combined_wordfreq.txt | php bin/buildgraph.php dict/wikipedia_gutt
 Desmooshing words
 -----------------
 
+This example is running via interpretted PHP 5.3.2:
+
 ```bash
 cat examples.txt | php bin/desmoosh.php dict/wikipedia_guttenberg.json
 
@@ -41,3 +43,22 @@ malsucksatbugreports => mal sucks at bug reports (in 11.18ms)
 legendaryllamasloveliberallooselettuceleafs => legendary llamas love liberal loose lettuce leafs (in 246.38ms)
 ```
 
+This example is running via Facebook's HHVM:
+
+```bash
+cat examples.txt | hhvm bin/desmoosh.php dict/wikipedia_guttenberg.json 
+
+debtconsolidateweb => debt consolidate web (in 6.41ms)
+mydisneyvacationresort => my disney vacation resort (in 7.51ms)
+machoarts => macho arts (in 0.75ms)
+idrawonphoto => i draw on photo (in 1.61ms)
+myfreeforextraining => my free forex training (in 4.04ms)
+cattick => cat tick (in 0.42ms)
+fooarmrestyourbararrestbarfoo => foo armrest your bar arrest bar foo (in 7.65ms)
+expertsexchange => experts exchange (in 1.49ms)
+threelittlepigswenttomarket => three little pigs went to market (in 19.93ms)
+theirony => the irony (in 1.15ms)
+malsucksatbugreports => mal sucks at bug reports (in 4.95ms)
+1800flowers => 1800 flowers (in 0.40ms)
+legendaryllamasloveliberallooselettuceleafs => legendary llamas love liberal loose lettuce leafs (in 125.53ms)
+```
