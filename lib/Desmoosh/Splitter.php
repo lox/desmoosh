@@ -19,35 +19,38 @@ class Splitter
 	{
 		$words = array();
 
+		// don't include chains that are perfect subsets
+		if(count($stack) > 1 && $this->_graph->contains(implode('', $stack)))
+			return array();
+
 		for($i=0; $i<=strlen($string); $i++)
 		{
 			$prefix = substr($string, 0, $i+1);
 
-			// hack for numerics
+			// handle numeric prefixes
 			if(is_numeric($prefix) && preg_match("/^\d+/", $string, $m))
 			{
 				$words[$m[0]] = $this->_enumerate(substr($string, strlen($m[0])));
 				$i += (strlen($m[0])-1);
-				continue;
 			}
-
-			if(
-				(strlen($prefix) > 1 || in_array($prefix, array('i', 'a'))) &&
+			// handles strings
+			else if((strlen($prefix) > 1 || in_array($prefix, array('i', 'a'))) &&
 				$this->_graph->contains($prefix))
 			{
 				$newStack = array_merge($stack, array($prefix));
 
-				// don't follow routes with long chains of little words
-				if(count($newStack) > 4 && floor($this->_avg($newStack)) <= 2)
-					continue;
+				// don't include chains with long chains of little words
+				if(count($newStack) > 4 && floor($this->_avgLength(array_slice($newStack, -4))) <= 2)
+					return array();
 
 				$words[$prefix] = $this->_enumerate(substr($string, strlen($prefix)), $newStack);
-
-				// prune enumerations that are missing pieces
-				if(!count($words[$prefix]) && $prefix != $string)
-					unset($words[$prefix]);
 			}
 		}
+
+		// prune incomplete chains
+		foreach($words as $key=>$below)
+			if(!count($words[$key]) && $key != $string)
+				unset($words[$key]);
 
 		return $words;
 	}
@@ -83,38 +86,54 @@ class Splitter
 	{
 		$lowest = array();
 
+		if(getenv('DEBUG'))
+			printf("Found %d permutations\n", count($stacks));
+
 		foreach($stacks as $stack)
 		{
 			if(getenv('DEBUG'))
 			{
 				printf("Stack %s [count %d avg %d score %d]\n",
-					implode('|', $stack), count($stack), $this->_avg($stack), $this->_frequency($stack));
+					implode('|', $stack), count($stack), $this->_avgLength($stack), $this->_score($stack));
 			}
 
 			if(!isset($lowest[0]) ||
 				(count($stack) < $lowest[1]) ||
-				(count($stack) == $lowest[1] && $this->_frequency($stack) > $lowest[2]))
+				(count($stack) == $lowest[1] && $this->_score($stack) > $lowest[2]))
 			{
-				$lowest = array($stack, count($stack), $this->_frequency($stack));
+				$lowest = array($stack, count($stack), $this->_score($stack));
 			}
 		}
 
 		return $lowest[0];
 	}
 
-	private function _avg($array)
+	private function _avgLength($array)
 	{
 		$lengths = array_map('strlen', $array);
 		return count($array) ? array_sum($lengths) / count($array) : 0;
 	}
 
-	private function _frequency($array)
+	private function _median($numbers)
 	{
-		$sum = 0;
+		rsort($numbers);
+		$middle = round(count($numbers) / 2);
+
+		if(!count($numbers))
+			return 0;
+		if(count($numbers) % 2 == 1)
+			return $numbers[$middle-1];
+		else
+			return ($numbers[$middle-1] + $numbers[$middle]) / 2;
+	}
+
+	private function _score($array)
+	{
+		$freq = array();
 
 		foreach($array as $word)
-			$sum += $this->_graph->frequency($word);
+			$freq []= $this->_graph->frequency($word);
 
-		return $sum;
+		return array_sum($freq);
 	}
 }

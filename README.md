@@ -26,16 +26,18 @@ Desmooshing words
 ```bash
 cat examples.txt | php bin/desmoosh.php dict/wikipedia_guttenberg.json
 
-debtconsolidateweb => debtconsolidateweb => debt consolidate web (in 23.62ms)
-mydisneyvacationresort => mydisneyvacationresort => my disney vacation resort (in 21.31ms)
-machoarts => machoarts => macho arts (in 3.85ms)
-idrawonphoto => idrawonphoto => i draw on photo (in 5.20ms)
-myfreeforextraining => myfreeforextraining => my free forex training (in 10.20ms)
-cattick => cattick => cat tick (in 1.46ms)
-fooarmrestyourbararrestbarfoo => fooarmrestyourbararrestbarfoo => foo armrest your bar arrest bar foo (in 89.90ms)
-expertsexchange => expertsexchange => experts exchange (in 10.64ms)
-threelittlepigswenttomarket => threelittlepigswenttomarket => three little pigs went to market (in 189.31ms)
-theirony => theirony => the irony (in 2.18ms)
-malsucksatbugreports => malsucksatbugreports => mal sucks at bug reports (in 14.77ms)
+debtconsolidateweb => debt consolidate web (in 13.81ms)
+mydisneyvacationresort => my disney vacation resort (in 13.89ms)
+machoarts => macho arts (in 2.65ms)
+idrawonphoto => i draw on photo (in 4.09ms)
+myfreeforextraining => my free forex training (in 10.86ms)
+cattick => cat tick (in 1.18ms)
+fooarmrestyourbararrestbarfoo => foo armrest your bar arrest bar foo (in 17.52ms)
+expertsexchange => experts exchange (in 6.01ms)
+threelittlepigswenttomarket => three little pigs went to market (in 43.86ms)
+theirony => the irony (in 1.45ms)
+malsucksatbugreports => mal sucks at bug reports (in 11.18ms)
+1800flowers => 1800 flowers (in 1.46ms)
+legendaryllamasloveliberallooselettuceleafs => legendary llamas love liberal loose lettuce leafs (in 246.38ms)
 ```
 
