@@ -17,13 +17,17 @@ if(count($argv) == 1)
 $splitter = new Splitter(WordGraph::fromJson($argv[1]));
 $stdin = fopen('php://stdin', 'r');
 
-while($line = trim(fgets($stdin)))
+while($original = trim(fgets($stdin)))
 {
+	// trim of tld's from domain names
+	$line = preg_replace('/\.(\w{2,})$/','',strtolower($original));
+	$line = preg_replace('/[^a-z]+/i','',$line);
 	$time = microtime(true);
-	printf("%s => ", $line);
+
+	printf("%s => ", $original);
 	$words = $splitter->split($line);
 
 	printf("%s (in %.2fms)\n",
-		implode(' ', $words), (microtime(true)-$time)*1000);
+		implode(' ', $words) ?: 'FAILED', (microtime(true)-$time)*1000);
 
 }
