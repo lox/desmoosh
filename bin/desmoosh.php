@@ -20,14 +20,13 @@ $stdin = fopen('php://stdin', 'r');
 while($original = trim(fgets($stdin)))
 {
 	// trim of tld's from domain names
-	$line = preg_replace('/\.(\w{2,})$/','',strtolower($original));
-	$line = preg_replace('/[^a-z]+/i','',$line);
+	$normalized = preg_replace('/\.(\w{2,})(\.(\w{2,}))?$/','',strtolower($original));
+	$normalized = preg_replace('/[^0-9a-z]+/i','',$normalized);
 	$time = microtime(true);
 
-	printf("%s => ", $original);
-	$words = $splitter->split($line);
+	printf("%s => $normalized => ", $original);
+	$words = $splitter->split($normalized);
 
 	printf("%s (in %.2fms)\n",
 		implode(' ', $words) ?: 'FAILED', (microtime(true)-$time)*1000);
-
 }

@@ -26,16 +26,16 @@ Desmooshing words
 ```bash
 cat examples.txt | php bin/desmoosh.php dict/wikipedia_guttenberg.json
 
-debtconsolidateweb => debt consolidate web (in 52.13ms)
-mydisneyvacationresort => my disney vacation resort (in 50.08ms)
-machoarts => macho arts (in 3.34ms)
-idrawonphoto => i draw on photo (in 6.23ms)
-myfreeforextraining => my free forex training (in 38.80ms)
-cattick => cat tick (in 1.54ms)
-fooarmrestyourbararrestbarfoo => foo armrest your bar arrest bar foo (in 958.03ms)
-expertsexchange => experts exchange (in 16.36ms)
-threelittlepigswenttomarket => three little pigs went to market (in 1133.91ms)
-theirony => the irony (in 2.17ms)
-malsucksatbugreports => mal sucks at bug reports (in 40.91ms)
+debtconsolidateweb => debtconsolidateweb => debt consolidate web (in 23.62ms)
+mydisneyvacationresort => mydisneyvacationresort => my disney vacation resort (in 21.31ms)
+machoarts => machoarts => macho arts (in 3.85ms)
+idrawonphoto => idrawonphoto => i draw on photo (in 5.20ms)
+myfreeforextraining => myfreeforextraining => my free forex training (in 10.20ms)
+cattick => cattick => cat tick (in 1.46ms)
+fooarmrestyourbararrestbarfoo => fooarmrestyourbararrestbarfoo => foo armrest your bar arrest bar foo (in 89.90ms)
+expertsexchange => expertsexchange => experts exchange (in 10.64ms)
+threelittlepigswenttomarket => threelittlepigswenttomarket => three little pigs went to market (in 189.31ms)
+theirony => theirony => the irony (in 2.18ms)
+malsucksatbugreports => malsucksatbugreports => mal sucks at bug reports (in 14.77ms)
 ```
 
